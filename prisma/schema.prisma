@@ -1,0 +1,91 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model Admin {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Teacher {
+  id         Int      @id @default(autoincrement())
+  teacherId  String   @unique
+  name       String
+  email      String?
+  photo      String
+  phone      String
+  address    String
+  linkedin   String?
+  batches    Batch[]  @relation("TeacherBatches")
+  sex        UserSex 
+}
+
+model Student {
+  id         Int      @id @default(autoincrement())
+  studentId  String   @unique
+  name       String
+  email      String
+  photo      String
+  phone      String
+  grade      Int
+  address    String
+  batches    Batch[]  @relation("StudentBatches")
+  sex        UserSex 
+}
+
+model Event {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  startTime   DateTime
+  endTime     DateTime
+  batchId     Int
+  batch       Batch    @relation(fields: [batchId], references: [id], name: "BatchEvents")
+}
+
+model Batch {
+  id         Int       @id @default(autoincrement())
+  batchname  String
+  capacity   Int
+  teacherId  Int?
+  teacher    Teacher?  @relation("TeacherBatches", fields: [teacherId], references: [id])
+  students   Student[] @relation("StudentBatches")
+  zoomLink   String
+  events     Event[]   @relation("BatchEvents")
+}
+
+
+
+model Announcement {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String
+  date        DateTime
+}
+
+enum UserSex {
+  MALE
+  FEMALE
+}
+
+enum Day {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+}
