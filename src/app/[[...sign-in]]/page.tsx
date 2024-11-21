@@ -29,7 +29,7 @@ const LoginPage = () => {
         >
           <h1 className="text-xl font-bold flex items-center gap-2">
             <Image src="/cmsLogo.png" alt="" width={100} height={100} />
-            iSchool of AI's CMS
+            iSchool of AI CMS
           </h1>
           <h2 className="text-gray-400">Sign in to your account</h2>
           <Clerk.GlobalError className="text-sm text-red-400" />
