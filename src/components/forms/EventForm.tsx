@@ -9,11 +9,11 @@ import { useState } from "react";
 const EventForm = ({
   type,
   data,
-  batches = [], // Default to an empty array
+  batches = [], 
 }: {
   type: "create" | "update";
   data?: any;
-  batches?: { id: number; batchname: string }[]; // Make optional to handle fallback
+  batches?: { id: number; batchname: string }[]; 
 }) => {
   const {
     register,
