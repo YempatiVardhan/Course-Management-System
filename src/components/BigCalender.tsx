@@ -39,58 +39,72 @@
 
 // export default BigCalendar;
 
-"use client";
+"use client"; // Ensure client-side rendering for React Big Calendar
 
 import { Calendar, momentLocalizer, View, Views } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useState } from "react";
 
-// Define the type for calendar events
+// Type definition for calendar events
 interface CalendarEvent {
-  title: string;  // Event title
-  start: Date;  // Event start time
-  end: Date;  // Event end time
+  title: string;      // Event title
+  start: Date;        // Event start time
+  end: Date;          // Event end time
   zoomLink?: string;  // Optional Zoom link
 }
 
-// Initialize the moment localizer for the calendar
+// Localizer for the calendar using moment.js
 const localizer = momentLocalizer(moment);
 
 const BigCalendar = ({ events }: { events: CalendarEvent[] }) => {
-  const [view, setView] = useState<View>(Views.WORK_WEEK);  // Default view is work week
-  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);  // To store the selected event
+  // State for the current calendar view
+  const [view, setView] = useState<View>(Views.WORK_WEEK);
+  // State for the selected event
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
 
-  // Handle change of view in the calendar
+  // Handle view change
   const handleOnChangeView = (selectedView: View) => {
-    setView(selectedView);  // Set the selected view (e.g., "work_week", "day", etc.)
+    setView(selectedView);
   };
 
-  // Display event details (like Zoom link) when an event is selected
+  // Handle event selection
   const handleEventSelect = (event: CalendarEvent) => {
-    setSelectedEvent(event);  // Store the selected event
+    setSelectedEvent(event);
   };
 
   return (
     <div>
       <Calendar
         localizer={localizer}
-        events={events}  // Pass the events array
-        startAccessor="start"  // Start date accessor
-        endAccessor="end"  // End date accessor
-        views={["work_week", "day"]}  // Available views
-        view={view}  // Set current view
-        style={{ height: "98%" }}  // Set calendar height
-        onView={handleOnChangeView}  // Handle view change
-        min={new Date(2025, 1, 0, 8, 0, 0)}  // Min time for the calendar (8 AM)
-        max={new Date(2025, 1, 0, 17, 0, 0)}  // Max time for the calendar (5 PM)
-        onSelectEvent={handleEventSelect}  // Select an event and show details
+        events={events} // Pass events as props
+        startAccessor="start"
+        endAccessor="end"
+        views={["work_week", "day"]} // Limit available views
+        view={view}
+        onView={handleOnChangeView}
+        onSelectEvent={handleEventSelect}
+        min={new Date(2025, 1, 0, 8, 0, 0)} // Start of workday
+        max={new Date(2025, 1, 0, 17, 0, 0)} // End of workday
+        style={{ height: "98%" }}
       />
 
+      {/* Display selected event details */}
       {selectedEvent && (
-        <div className="event-details">
+        <div className="event-details mt-4">
           <h4>{selectedEvent.title}</h4>
-          <p>Zoom Link: <a href={selectedEvent.zoomLink} target="_blank" rel="noopener noreferrer">{selectedEvent.zoomLink}</a></p>
+          {selectedEvent.zoomLink && (
+            <p>
+              Zoom Link:{" "}
+              <a
+                href={selectedEvent.zoomLink}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {selectedEvent.zoomLink}
+              </a>
+            </p>
+          )}
         </div>
       )}
     </div>
@@ -98,4 +112,3 @@ const BigCalendar = ({ events }: { events: CalendarEvent[] }) => {
 };
 
 export default BigCalendar;
-

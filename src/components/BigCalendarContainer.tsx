@@ -113,50 +113,54 @@
 //   });
 // }
 
-import prisma from "@/lib/prisma";  // Import Prisma client
-import BigCalendar from "./BigCalender";  // The calendar component
-import { adjustScheduleToCurrentWeek } from "@/lib/utils";  // Utility function for scheduling adjustments
+import prisma from "@/lib/prisma"; // Import Prisma client
+import BigCalendar from "./BigCalender"; // The calendar component
+import { adjustScheduleToCurrentWeek } from "@/lib/utils"; // Utility function for scheduling adjustments
 
 const BigCalendarContainer = async ({
   type,
   id,
 }: {
-  type: "teacherId" | "classId";  // The type of query (by teacherId or batchId)
-  id: string | number;  // The id of teacher or class
+  type: "teacherId" | "classId" | "batchId"; // Add "batchId" as a valid type
+  id: string | number; // The id of teacher, class, or batch
 }) => {
-  // Fetch the events based on teacherId or classId
+  // Fetch the events based on teacherId, classId, or batchId
   const dataRes = await prisma.event.findMany({
     where: {
       ...(type === "teacherId"
         ? {
             batch: {
               teacher: {
-                teacherId: id as string,  // Fetch events for the teacher
+                teacherId: id as string, // Fetch events for the teacher
               },
             },
           }
+        : type === "classId"
+        ? {
+            batchId: id as number, // Fetch events for the specific class
+          }
         : {
-            batchId: id as number,  // Fetch events for the specific batch
+            batchId: id as number, // Fetch events for the specific batch
           }),
     },
     include: {
-      batch: true,  // Include batch data to get the Zoom link
+      batch: true, // Include batch data to get the Zoom link
     },
   });
 
   // Map the events to a format suitable for BigCalendar
   const events = dataRes.map((event) => ({
-    title: `${event.title} - Zoom: ${event.batch.zoomLink}`,  // Display Zoom link with event title
-    start: event.startTime,  // Event start time
-    end: event.endTime,  // Event end time
-    zoomLink: event.batch.zoomLink,  // Include zoomLink for additional reference (optional)
+    title: `${event.title} - Zoom: ${event.batch.zoomLink}`, // Display Zoom link with event title
+    start: event.startTime, // Event start time
+    end: event.endTime, // Event end time
+    zoomLink: event.batch.zoomLink, // Include zoomLink for additional reference (optional)
   }));
 
   // Adjust the events to match the current week (e.g., updating dates)
   const schedule = adjustScheduleToCurrentWeek(events);
 
   return (
-    <div className="">
+    <div>
       <BigCalendar events={schedule} /> {/* Pass the adjusted events to BigCalendar */}
     </div>
   );

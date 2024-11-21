@@ -44,7 +44,6 @@
 
 // export default CountChartContainer;
 
-
 import Image from "next/image";
 import CountChart from "./CountChart";
 import prisma from "@/lib/prisma";
@@ -59,16 +58,16 @@ type GroupByStudent = {
 
 const CountChartContainer = async () => {
   // Correct query for grouping students by sex
-  const data: GroupByStudent[] = await prisma.student.groupBy({
-    by: ["sex"],
+  const data = await prisma.student.groupBy({
+    by: ["sex"], // Group by 'sex'
     _count: {
-      studentId: true, // Use studentId (or any other field) for counting students
+      studentId: true, // Count the number of students by 'studentId'
     },
   });
 
   // Explicitly type the parameter 'd' as GroupByStudent
-  const boys = data.find((d: GroupByStudent) => d.sex === "MALE")?._count.studentId || 0;
-  const girls = data.find((d: GroupByStudent) => d.sex === "FEMALE")?._count.studentId || 0;
+  const boys = data.find((d) => d.sex === "MALE")?._count.studentId || 0;
+  const girls = data.find((d) => d.sex === "FEMALE")?._count.studentId || 0;
 
   return (
     <div className="bg-white rounded-xl w-full h-full p-4">
