@@ -42,6 +42,15 @@ export const batchschema = z.object({
   });
   export type AnnouncementSchema = z.infer<typeof announcementschema>;
 
+  export const eventschema = z.object({
+    title: z.string().min(1, { message: "Event Title is required" }),
+    description: z.string().min(1, { message: "Description is required" }),
+    startTime: z.string().min(1, { message: "Start Time is required" }),
+    endTime: z.string().min(1, { message: "End Time is required" }),
+    batchId: z.number().min(1, { message: "Batch is required" }), // Assuming the batchId must be provided
+  });
+  export type EventSchema = z.infer<typeof eventschema>;
+
   export const teacherschema = z.object({
     username: z
       .string()
@@ -63,3 +72,5 @@ export const batchschema = z.object({
       .optional(),
   });
   export type TeacherSchema = z.infer<typeof teacherschema>;
+
+  

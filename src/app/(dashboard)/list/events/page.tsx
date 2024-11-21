@@ -1,5 +1,7 @@
 // import FormContainer from "@/components/FormContainer";
+import FormModal from "@/components/FormModal";
 import Pagination from "@/components/Pagination";
+
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
 import prisma from "@/lib/prisma";
@@ -15,7 +17,7 @@ const EventListPage = async ({
 }: {
   searchParams: { [key: string]: string | undefined };
 }) => {
-  const { userId, sessionClaims } = auth();
+  const { userId, sessionClaims } = await auth();
   const role = (sessionClaims?.metadata as { role?: string })?.role;
   const currentUserId = userId;
 
@@ -72,7 +74,7 @@ const EventListPage = async ({
       className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight"
     >
       <td className="flex items-center gap-4 p-4">{item.title}</td>
-      <td>{item.batch?.name || "-"}</td>
+      <td>{item.batch?.batchname || "-"}</td>
       <td className="hidden md:table-cell">
         {new Intl.DateTimeFormat("en-US").format(item.startTime)}
       </td>
@@ -129,10 +131,10 @@ const EventListPage = async ({
     parent: { students: { some: { parentId: currentUserId! } } },
   };
 
-  query.OR = [
-    { batchId: null }, // Include events without batch
-    { batch: roleConditions[role as keyof typeof roleConditions] || {} },
-  ];
+  // query.OR = [
+  //   { batchId: null }, // Include events without batch
+  //   { batch: roleConditions[role as keyof typeof roleConditions] || {} },
+  // ];
 
   const [data, count] = await prisma.$transaction([
     prisma.event.findMany({
@@ -158,7 +160,8 @@ const EventListPage = async ({
             <button className="w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow">
               <Image src="/sort.png" alt="" width={14} height={14} />
             </button>
-            {role === "admin" && <FormContainer table="event" type="create" />}
+            {/* {role === "admin" && <FormContainer table="event" type="create" />} */}
+            {role === "admin" && <FormModal table="event" type="create" />}
           </div>
         </div>
       </div>

@@ -16,6 +16,9 @@ const BatchForm = dynamic(() => import("./forms/BatchForm"), {
 const AnnouncementForm = dynamic(() => import("./forms/AnnouncementForm"), {
   loading: () => <h1>Loading...</h1>,
 });
+const EventForm = dynamic(() => import("./forms/EventForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
 
 const forms: {
   [key: string]: (type: "create" | "update", data?: any) => JSX.Element;
@@ -24,6 +27,7 @@ const forms: {
   student: (type, data) => <StudentForm type={type} data={data} />,
   batch: (type, data) => <BatchForm type={type} data={data} />,
   Announcement: (type, data) => <AnnouncementForm type={type} data={data} />,
+  event: (type, data) => <EventForm type={type} data={data} />,
 
 };
 
@@ -37,6 +41,7 @@ const FormModal = ({
     | "teacher"
     | "student"
     | "batch"
+    | "event"
     | "Announcement";
     
   type: "create" | "update" | "delete";

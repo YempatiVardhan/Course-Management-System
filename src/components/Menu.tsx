@@ -32,12 +32,12 @@ const menuItems = [
         visible: ["admin", "teacher","students"],
       },
      
-      // {
-      //   icon: "/assignment.png",
-      //   label: "Assignments",
-      //   href: "/list/assignments",
-      //   visible: ["admin", "teacher", "student", "parent"],
-      // },
+      {
+        icon: "/assignment.png",
+        label: "Events",
+        href: "/list/events",
+        visible: ["admin", "teacher", "student"],
+      },
       // {
       //   icon: "/calendar.png",
       //   label: "Events",
